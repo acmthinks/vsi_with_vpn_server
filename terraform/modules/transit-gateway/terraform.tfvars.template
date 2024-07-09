@@ -1,0 +1,16 @@
+# IBM Cloud API key allowed to create resource group, VPC, VSI, SSH key
+ibmcloud_api_key=""
+
+# IBM Region e.g., us-south, us-east, eu-gb, au-syd...
+ibm_cloud_region=""
+
+prefix=""
+
+
+transit_gateway_connection_name_1 = ""
+transit_gateway_connection_network_type_1 = ""
+transit_gateway_connection_network_id_1 = ""
+
+transit_gateway_connection_name_2 = ""
+transit_gateway_connection_network_type_2 = ""
+transit_gateway_connection_network_id_2 = ""
