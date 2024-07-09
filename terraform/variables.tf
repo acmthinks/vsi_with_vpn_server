@@ -9,6 +9,12 @@ variable "prefix" {
   description = "The string that needs to be attached to every resource created"
 }
 
+variable "resource_group" {
+  type        = string
+  default     = "demo-rg"
+  description = "Name of the resource group"
+}
+
 variable "region" {
   type        = string
   description = "IBM Cloud region to provision the resources."
@@ -53,9 +59,4 @@ variable "secrets_manager_instance_crn" {
 variable "vpn_certificate_crn" {
   type        = string
   description = "CRN of existing VPN certificate instance from Secrets Manager"
-}
-
-variable "powervs_workspace_crn" {
-  type        = string
-  description = "Resource CRN of the PowerVS workspace (used for Transit Gateway Connection)"
 }
