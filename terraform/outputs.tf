@@ -3,7 +3,8 @@ output "vpn_server_url" {
 }
 
 output "bastion_server_vsi_ip" {
-    value = ibm_is_instance.bastion_server_vsi.primary_network_interface[0].primary_ipv4_address
+    value = ibm_is_instance.bastion_server_vsi.primary_network_attachment[0].virtual_network_interface[0].primary_ip
+    #value = ibm_is_instance.bastion_server_vsi.primary_network_attachment[0].virtual_network_interface[0].
 }
 
 output "vpc_name" {

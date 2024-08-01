@@ -60,3 +60,50 @@ variable "vpn_certificate_crn" {
   type        = string
   description = "CRN of existing VPN certificate instance from Secrets Manager"
 }
+
+## Reserved Endpoints
+
+#Must also leave open: port 53/UDP/DNS, port 80/TCP/HTTP, port 443/TCP/HTTPS, port 8443/TCP/HTTPS (for linux) for IaaS service endpoints to work
+#more info at https://cloud.ibm.com/docs/vpc?topic=vpc-service-endpoints-for-vpc
+variable "iaas-service-endpoint-cidr" {
+  type = string
+  description = "Infrastructure services are available by using certain DNS names from the adn.networklayer.com domain, and they resolve to 161.26.0.0/16 addresses. Services that you can reach include: DNS resolvers, Ubuntu and Debian APT mirrors, NTP, IBM COS."
+  default = "161.26.0.0/16"
+}
+variable "wpp-collection-endpoint-cidr-1" {
+  type        = string
+  description = "IBM Cloud Security and Compliance Center - Workload Protection collection endpoint #1"
+  default = "166.9.228.45/32"
+}
+variable "wpp-collection-endpoint-cidr-2" {
+  type        = string
+  description = "IBM Cloud Security and Compliance Center - Workload Protection collection endpoint #2"
+  default = "166.9.229.45/32"
+}
+variable "wpp-collection-endpoint-cidr-3" {
+  type        = string
+  description = "IBM Cloud Security and Compliance Center - Workload Protection collection endpoint #3"
+  default = "166.9.230.45/32"
+}
+
+variable "wpp-collection-endpoint-cidr-1-deprecated" {
+  type        = string
+  description = "IBM Cloud Security and Compliance Center - Workload Protection collection endpoint #1 (deprecated)"
+  default = "166.9.14.170/32"
+}
+variable "wpp-collection-endpoint-cidr-2-deprecated" {
+  type        = string
+  description = "IBM Cloud Security and Compliance Center - Workload Protection collection endpoint #2 (deprecated)"
+  default = "166.9.48.41/32"
+}
+variable "wpp-collection-endpoint-cidr-3-deprecated" {
+  type        = string
+  description = "IBM Cloud Security and Compliance Center - Workload Protection collection endpoint #3 (deprecated)"
+  default = "166.9.17.11/32"
+}
+
+variable "wpp-collection-endpoint-port" {
+  type        = number
+  description = "IBM Cloud Security and Compliance Center - Workload Protection collection endpoint port"
+  default = 6443
+}
