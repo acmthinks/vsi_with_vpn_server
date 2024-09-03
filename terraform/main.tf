@@ -167,20 +167,20 @@ resource "ibm_is_subnet_network_acl_attachment" "vpn_server_subnet_acl_attachmen
 ##  (9) | inbound   | Allow     | TCP       | 166.9.14.170/32 6443 | 10.50.0.128/25  wpp1 collection endpoint (deprecated)
 ##  (10)| inbound   | Allow     | TCP       | 166.9.48.41/32 6443  | 10.50.0.128/25  wpp2 collection endpoint (deprecated)
 ##  (11)| inbound   | Allow     | TCP       | 166.9.17.11/32 6443  | 10.50.0.128/25  wpp3 collection endpoint (deprecated)
-##  12  | inbound   | Deny      | ALL       | 0.0.0.0/0     | 0.0.0.0/0
+##  12  | inbound   | Deny      | ALL       | 0.0.0.0/0     | 10.50.0.128/25
 ##
 ##  1   | outbound  | Allow     | ALL       | 10.50.0.128/25 | 192.168.0.0/16 Internet traffic through Client VPN Server
 ##  2   | outbound  | Allow     | ALL       | 10.50.0.128/25 | 10.50.0.0/25
 ##  3   | outbound  | Allow     | TCP       | 10.50.0.128/25 443 | 0.0.0.0/0
 ##  (4) | outbound  | Allow     | ALL       | 10.50.0.128/25 | 10.60.0.128/25 for connecting to another VPC or PowerVS workspace
-##  (5) | outbound  | Allow     | ALL       | 0.0.0.0/0      | 161.26.0.0/16 IaaS service endpoints (RHN, NTP, DNS, et al)
-##  (6) | outbound  | Allow     | TCP       | 0.0.0.0/0      | 166.9.228.45/32 6443   wpp1 collection endpoint
-##  (7) | outbound  | Allow     | TCP       | 0.0.0.0/0      | 166.9.229.45/32 6443   wpp2 collection endpoint
-##  (8) | outbound  | Allow     | TCP       | 0.0.0.0/0      | 166.9.230.45/32 6443   wpp3 collection endpoint
-##  (9) | outbound  | Allow     | TCP       | 0.0.0.0/0      | 166.9.14.170/32 6443   wpp1 collection endpoint (deprecated)
-##  (10)| outbound  | Allow     | TCP       | 0.0.0.0/0      | 166.9.48.41/32 6443   wpp2 collection endpoint (deprecated)
-##  (11)| outbound  | Allow     | TCP       | 0.0.0.0/0      | 166.9.17.11/32 6443   wpp3 collection endpoint (deprecated)
-##  12  | outbound  | Deny      | ALL       | 0.0.0.0/0     | 0.0.0.0/0
+##  (5) | outbound  | Allow     | ALL       | 10.50.0.128/25      | 161.26.0.0/16 IaaS service endpoints (RHN, NTP, DNS, et al)
+##  (6) | outbound  | Allow     | TCP       | 10.50.0.128/25      | 166.9.228.45/32 6443   wpp1 collection endpoint
+##  (7) | outbound  | Allow     | TCP       | 10.50.0.128/25      | 166.9.229.45/32 6443   wpp2 collection endpoint
+##  (8) | outbound  | Allow     | TCP       | 10.50.0.128/25      | 166.9.230.45/32 6443   wpp3 collection endpoint
+##  (9) | outbound  | Allow     | TCP       | 10.50.0.128/25      | 166.9.14.170/32 6443   wpp1 collection endpoint (deprecated)
+##  (10)| outbound  | Allow     | TCP       | 10.50.0.128/25      | 166.9.48.41/32 6443   wpp2 collection endpoint (deprecated)
+##  (11)| outbound  | Allow     | TCP       | 10.50.0.128/25      | 166.9.17.11/32 6443   wpp3 collection endpoint (deprecated)
+##  12  | outbound  | Deny      | ALL       | 10.50.0.128/25     | 0.0.0.0/0
 ###############################################################################
 resource "ibm_is_network_acl" "bastion_server_subnet_acl" {
   name = "bastion-server-subnet-acl"
@@ -204,7 +204,7 @@ resource "ibm_is_network_acl" "bastion_server_subnet_acl" {
     name        = "inbound-iaas-service-endpoints"
     action      = "allow"
     source      = var.iaas-service-endpoint-cidr
-    destination = var.edge_vpc_bastion_cidr
+    destination = "0.0.0.0/0"
     direction   = "inbound"
   }
   rules {
@@ -277,7 +277,7 @@ resource "ibm_is_network_acl" "bastion_server_subnet_acl" {
     name        = "inbound-deny-all"
     action      = "deny"
     source      = "0.0.0.0/0"
-    destination = "0.0.0.0/0"
+    destination = var.edge_vpc_bastion_cidr
     direction   = "inbound"
   }
     rules {
@@ -315,7 +315,7 @@ resource "ibm_is_network_acl" "bastion_server_subnet_acl" {
   rules {
     name        = "outbound-wpp1-agent"
     action      = "allow"
-    source      = "0.0.0.0/0"
+    source      = var.edge_vpc_bastion_cidr
     destination = var.wpp-collection-endpoint-cidr-1
     direction   = "outbound"
     tcp {
@@ -326,7 +326,7 @@ resource "ibm_is_network_acl" "bastion_server_subnet_acl" {
   rules {
     name        = "outbound-wpp2-agent"
     action      = "allow"
-    source      = "0.0.0.0/0"
+    source      = var.edge_vpc_bastion_cidr
     destination = var.wpp-collection-endpoint-cidr-2
     direction   = "outbound"
     tcp {
@@ -337,7 +337,7 @@ resource "ibm_is_network_acl" "bastion_server_subnet_acl" {
   rules {
     name        = "outbound-wpp3-agent"
     action      = "allow"
-    source      = "0.0.0.0/0"
+    source      = var.edge_vpc_bastion_cidr
     destination = var.wpp-collection-endpoint-cidr-3
     direction   = "outbound"
     tcp {
@@ -348,7 +348,7 @@ resource "ibm_is_network_acl" "bastion_server_subnet_acl" {
   rules {
     name        = "outbound-wpp1-agent-deprecated"
     action      = "allow"
-    source      = "0.0.0.0/0"
+    source      = var.edge_vpc_bastion_cidr
     destination = var.wpp-collection-endpoint-cidr-1-deprecated
     direction   = "outbound"
     tcp {
@@ -359,7 +359,7 @@ resource "ibm_is_network_acl" "bastion_server_subnet_acl" {
   rules {
     name        = "outbound-wpp2-agent-deprecated"
     action      = "allow"
-    source      = "0.0.0.0/0"
+    source      = var.edge_vpc_bastion_cidr
     destination = var.wpp-collection-endpoint-cidr-2-deprecated
     direction   = "outbound"
     tcp {
@@ -370,7 +370,7 @@ resource "ibm_is_network_acl" "bastion_server_subnet_acl" {
   rules {
     name        = "outbound-wpp3-agent-deprecated"
     action      = "allow"
-    source      = "0.0.0.0/0"
+    source      = var.edge_vpc_bastion_cidr
     destination = var.wpp-collection-endpoint-cidr-3-deprecated
     direction   = "outbound"
     tcp {
@@ -381,7 +381,7 @@ resource "ibm_is_network_acl" "bastion_server_subnet_acl" {
   rules {
     name        = "outbound-deny-all"
     action      = "deny"
-    source      = "0.0.0.0/0"
+    source      = var.edge_vpc_bastion_cidr
     destination = "0.0.0.0/0"
     direction   = "outbound"
   }
@@ -691,7 +691,7 @@ data "ibm_resource_instance" "secrets_manager" {
 data "ibm_sm_imported_certificate" "imported_vpn_certificate" {
   instance_id   = data.ibm_resource_instance.secrets_manager.guid
   region        = var.region
-  name          = "qroc-vpn-server-cert"
+  name          = "vpn-server-cert"
   secret_group_name = "vpn-ca-certificates"
   #secret_id = "fed1412c-97f1-1449-8426-7137a7571ce8"
 }
@@ -776,6 +776,7 @@ resource "ibm_is_instance" "bastion_server_vsi" {
   zone = var.zone
   resource_group = data.ibm_resource_group.resource_group.id
   keys = [data.ibm_is_ssh_key.bastion_ssh_key.id]
+  tags = ["scc-wpp"]
 }
 
 #Create a public gateway, but do not attach by default
