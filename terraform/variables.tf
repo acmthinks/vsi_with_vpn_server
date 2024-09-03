@@ -56,10 +56,10 @@ variable "secrets_manager_instance_crn" {
   description = "CRN of existing Secrets Manager instance"
 }
 
-variable "vpn_certificate_crn" {
-  type        = string
-  description = "CRN of existing VPN certificate instance from Secrets Manager"
-}
+#variable "vpn_certificate_crn" {
+#  type        = string
+#  description = "CRN of existing VPN certificate instance from Secrets Manager"
+#}
 
 ## Reserved Endpoints
 
